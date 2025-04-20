@@ -1,0 +1,64 @@
+import tkinter as tk
+from tkinter import messagebox
+import random
+import string
+
+def generate_password():
+    length = length_slider.get()
+    use_upper = var_upper.get()
+    use_lower = var_lower.get()
+    use_digits = var_digits.get()
+    use_symbols = var_symbols.get()
+
+    if not (use_upper or use_lower or use_digits or use_symbols):
+        messagebox.showwarning("Warning", "Please select at least one character type!")
+        return
+
+    char_pool = ''
+    if use_upper:
+        char_pool += string.ascii_uppercase
+    if use_lower:
+        char_pool += string.ascii_lowercase
+    if use_digits:
+        char_pool += string.digits
+    if use_symbols:
+        char_pool += string.punctuation
+
+    password = ''.join(random.choice(char_pool) for _ in range(length))
+    password_var.set(password)
+
+def copy_password():
+    root.clipboard_clear()
+    root.clipboard_append(password_var.get())
+    messagebox.showinfo("Copied", "Password copied to clipboard!")
+
+# GUI setup
+root = tk.Tk()
+root.title("Passcode maker")
+root.geometry("400x300")
+root.configure(bg="#101728")
+
+password_var = tk.StringVar()
+
+tk.Label(root, text="🗝 Passcode maker", font=("comic sans", 14), fg="white", bg="#101728").pack(pady=30)
+tk.Entry(root, textvariable=password_var, font=("comic sans", 14), width=30).pack()
+
+tk.Button(root, text="Copy", command=copy_password, bg="#5865F2", fg="white").pack(pady=20)
+
+length_slider = tk.Scale(root, from_=4, to=32, orient='horizontal', label="Length", bg="#101728", fg="white")
+length_slider.set(12)
+length_slider.pack(pady=5)
+
+var_upper = tk.BooleanVar(value=True)
+var_lower = tk.BooleanVar(value=True)
+var_digits = tk.BooleanVar(value=True)
+var_symbols = tk.BooleanVar(value=False)
+
+tk.Checkbutton(root, text="Include Uppercase", variable=var_upper, bg="#101728", fg="white").pack(pady=5)
+tk.Checkbutton(root, text="Include Lowercase", variable=var_lower, bg="#101728", fg="white").pack(pady=5)
+tk.Checkbutton(root, text="Include Numbers", variable=var_digits, bg="#101728", fg="white").pack(pady=5)
+tk.Checkbutton(root, text="Include Symbols", variable=var_symbols, bg="#101728", fg="white").pack(pady=5)
+
+tk.Button(root, text="🔑 Unlock Code", command=generate_password, bg="#9B59B6", fg="white").pack(pady=30)
+
+root.mainloop()

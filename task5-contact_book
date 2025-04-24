@@ -25,33 +25,6 @@ def update_contact_list():
     contact_list.delete(0,tk,END)
     for contact in contacts:
         contact_list.insert(tk.END,f"{contact['Name']}-{contact['Phone']})
-import tkinter as tk
-from tkinter import messagebox
-
-#main window
-root=tk.Tk()
-root.title("Contact book")
-
-#list for storing contact
-contact=[]
-
-def add_contact():
-    name=name_entry.get()
-    email=email_entry.get()
-    phone=phone_entry.get()
-    address=address_entry.get()
-if name and phone:
-    contacts.append({"Name":name,"Phone":phone,"Email":email,"Address":address})
-    clear_entries()
-    update_contact_list()
-else:
-    messagebox.showerror("Error","Name and phone cannot be empty")
-    
-#update contact list function
-def update_contact_list():
-    contact_list.delete(0,tk,END)
-    for contact in contacts:
-        contact_list.insert(tk.END,f"{contact['Name']}-{contact['Phone']})
 
 #search contact function
 def search_contact():

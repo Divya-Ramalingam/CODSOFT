@@ -25,4 +25,105 @@ def update_contact_list():
     contact_list.delete(0,tk,END)
     for contact in contacts:
         contact_list.insert(tk.END,f"{contact['Name']}-{contact['Phone']})
+import tkinter as tk
+from tkinter import messagebox
 
+#main window
+root=tk.Tk()
+root.title("Contact book")
+
+#list for storing contact
+contact=[]
+
+def add_contact():
+    name=name_entry.get()
+    email=email_entry.get()
+    phone=phone_entry.get()
+    address=address_entry.get()
+if name and phone:
+    contacts.append({"Name":name,"Phone":phone,"Email":email,"Address":address})
+    clear_entries()
+    update_contact_list()
+else:
+    messagebox.showerror("Error","Name and phone cannot be empty")
+    
+#update contact list function
+def update_contact_list():
+    contact_list.delete(0,tk,END)
+    for contact in contacts:
+        contact_list.insert(tk.END,f"{contact['Name']}-{contact['Phone']})
+
+#search contact function
+def search_contact():
+    search_term=search_entry.get()
+    contact_list.delete(0,tk.END)
+    for contact in contacts:
+        if search_term.lower() in contact['Name'].lower() or search_term in contact['phone']:
+            contact_list.insert(tk.END,f"{contact['Name']} - {contact['phone']}")
+
+#update contact function
+def update_selected_contact():
+    selected_index = contact_list.curseselection()
+    name = name_entry.get()
+    phone = phone_entry.get()
+    email = email_entry.get()
+    address = address_entry.get()
+    if name and phone:
+        contacts[selected_index] = {"Name":name,"phone":phone,"Email":email,"Address":address}
+        clear_entries()
+        update_contact_list()
+    else:
+        messagebox.showerror("Error","Name andn phone cannot be empty!")
+
+#clear entry funtion
+def clear_entries():
+    name_entry.delete(0, tk.END)
+    phone_entry.delete(0, tk.END)
+    email_entry.delete(0, tk.END)
+    address_entry.delete(0, tk.END)
+
+#create label and entry fields
+name_label = tk.label(root, text="Name:")
+name_label.grid(row=0, column=0)
+name_entry = tk.entry(root)
+name_entry.grid(row=0, column=1)
+
+phone_label = tk.label(root, text="phone:")
+phone_label.grid(row=1, column=0)
+phone_entry = tk.entry(root)
+phone_entry.grid(row=1, column=0)
+
+email_label = tk.label(root, text="email:")
+email_label.grid(row=2, column=0)
+email_entry = tk.entry(root)
+email_entry.grid(row=2, column=0)
+
+address_label = tk.label(root, text="address:")
+address_label.grid(row=3, column=0)
+address_entry = tk.entry(root)
+address_entry.grid(row=3, column=0)
+
+#buttons
+add_button = tk.Button(root, text="Add Contact", command=add_contact)
+add_button.grid(row-0,column=2)
+
+update_button = tk.Button(root, text="update Contact", command=update_contact)
+update_button.grid(row-1,column=2)
+
+delete_button = tk.Button(root, text="delete Contact", command=delete_contact)
+delete_button.grid(row-0,column=2)
+
+search_label = tk.label(root,text="Search:")
+search.label.grid(row=4, column=0)
+search_entry = tk.entry(root)
+search_entry.grid(row=4, column=0)
+
+search_button = tk.Button(root, text="search", command=search_contact)
+search_button.grid(row-4,column=2)
+
+#create a listbox to display contacts
+contact_list = tk.Listbox(root, width=40)
+contact_llist.grid(row=5, cloumn=0, columnspan=3)
+
+# run application
+root.mainloop()

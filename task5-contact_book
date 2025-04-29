@@ -1,102 +1,124 @@
 import tkinter as tk
 from tkinter import messagebox
 
-#main window
-root=tk.Tk()
-root.title("Contact book")
+# Main window
+root = tk.Tk()
+root.title("📖 Contact Book")
+root.geometry("500x500")
+root.configure(bg="lightgrey")
 
-#list for storing contact
-contact=[]
+# Contact storage
+contacts = []
 
+# Functions
 def add_contact():
-    name=name_entry.get()
-    email=email_entry.get()
-    phone=phone_entry.get()
-    address=address_entry.get()
-if name and phone:
-    contacts.append({"Name":name,"Phone":phone,"Email":email,"Address":address})
-    clear_entries()
-    update_contact_list()
-else:
-    messagebox.showerror("Error","Name and phone cannot be empty")
-    
-#update contact list function
+    name = name_entry.get()
+    email = email_entry.get()
+    phone = phone_entry.get()
+    address = address_entry.get()
+    if name and phone:
+        contacts.append({"Name": name, "Phone": phone, "Email": email, "Address": address})
+        clear_entries()
+        update_contact_list()
+    else:
+        messagebox.showerror("Error", "Name and phone cannot be empty")
+
 def update_contact_list():
-    contact_list.delete(0,tk,END)
+    contact_list.delete(0, tk.END)
     for contact in contacts:
-        contact_list.insert(tk.END,f"{contact['Name']}-{contact['Phone']})
+        contact_list.insert(tk.END, f"{contact['Name']} - {contact['Phone']}")
 
-#search contact function
 def search_contact():
-    search_term=search_entry.get()
-    contact_list.delete(0,tk.END)
+    search_term = search_entry.get()
+    contact_list.delete(0, tk.END)
     for contact in contacts:
-        if search_term.lower() in contact['Name'].lower() or search_term in contact['phone']:
-            contact_list.insert(tk.END,f"{contact['Name']} - {contact['phone']}")
+        if search_term.lower() in contact['Name'].lower() or search_term in contact['Phone']:
+            contact_list.insert(tk.END, f"{contact['Name']} - {contact['Phone']}")
 
-#update contact function
 def update_selected_contact():
-    selected_index = contact_list.curseselection()
+    selected = contact_list.curselection()
+    if not selected:
+        messagebox.showerror("Error", "No contact selected")
+        return
+    index = selected[0]
     name = name_entry.get()
     phone = phone_entry.get()
     email = email_entry.get()
     address = address_entry.get()
     if name and phone:
-        contacts[selected_index] = {"Name":name,"phone":phone,"Email":email,"Address":address}
+        contacts[index] = {"Name": name, "Phone": phone, "Email": email, "Address": address}
         clear_entries()
         update_contact_list()
     else:
-        messagebox.showerror("Error","Name andn phone cannot be empty!")
+        messagebox.showerror("Error", "Name and phone cannot be empty")
 
-#clear entry funtion
+def delete_contact():
+    selected = contact_list.curselection()
+    if not selected:
+        messagebox.showerror("Error", "No contact selected")
+        return
+    index = selected[0]
+    del contacts[index]
+    update_contact_list()
+
 def clear_entries():
     name_entry.delete(0, tk.END)
     phone_entry.delete(0, tk.END)
     email_entry.delete(0, tk.END)
     address_entry.delete(0, tk.END)
 
-#create label and entry fields
-name_label = tk.label(root, text="Name:")
-name_label.grid(row=0, column=0)
-name_entry = tk.entry(root)
-name_entry.grid(row=0, column=1)
+# Entry field style
+entry_style = {"width": 30, "bg": "white", "fg": "black", "font": ("Helvetica", 10)}
 
-phone_label = tk.label(root, text="phone:")
-phone_label.grid(row=1, column=0)
-phone_entry = tk.entry(root)
-phone_entry.grid(row=1, column=0)
+# Form
+form_frame = tk.Frame(root, bg="lightgrey")
+form_frame.pack(pady=10)
 
-email_label = tk.label(root, text="email:")
-email_label.grid(row=2, column=0)
-email_entry = tk.entry(root)
-email_entry.grid(row=2, column=0)
+tk.Label(form_frame, text="Name:", bg="lightgrey", font=("Helvetica", 10), fg="black").grid(row=0, column=0, sticky="e")
+name_entry = tk.Entry(form_frame, **entry_style)
+name_entry.grid(row=0, column=1, pady=5)
 
-address_label = tk.label(root, text="address:")
-address_label.grid(row=3, column=0)
-address_entry = tk.entry(root)
-address_entry.grid(row=3, column=0)
+tk.Label(form_frame, text="Phone:", bg="lightgrey", font=("Helvetica", 10), fg="black").grid(row=1, column=0, sticky="e")
+phone_entry = tk.Entry(form_frame, **entry_style)
+phone_entry.grid(row=1, column=1)
 
-#buttons
-add_button = tk.Button(root, text="Add Contact", command=add_contact)
-add_button.grid(row-0,column=2)
+tk.Label(form_frame, text="Email:", bg="lightgrey", font=("Helvetica", 10), fg="black").grid(row=2, column=0, sticky="e")
+email_entry = tk.Entry(form_frame, **entry_style)
+email_entry.grid(row=2, column=1)
 
-update_button = tk.Button(root, text="update Contact", command=update_contact)
-update_button.grid(row-1,column=2)
+tk.Label(form_frame, text="Address:", bg="lightgrey", font=("Helvetica", 10), fg="black").grid(row=3, column=0, sticky="e")
+address_entry = tk.Entry(form_frame, **entry_style)
+address_entry.grid(row=3, column=1)
 
-delete_button = tk.Button(root, text="delete Contact", command=delete_contact)
-delete_button.grid(row-0,column=2)
+# Buttons
+button_frame = tk.Frame(root, bg="lightgrey")
+button_frame.pack(pady=10)
 
-search_label = tk.label(root,text="Search:")
-search.label.grid(row=4, column=0)
-search_entry = tk.entry(root)
-search_entry.grid(row=4, column=0)
+button_style = {"bg": "#87CEEB", "fg": "black", "font": ("Helvetica", 10, "bold"), "activebackground": "#00BFFF", "relief": "raised"}
 
-search_button = tk.Button(root, text="search", command=search_contact)
-search_button.grid(row-4,column=2)
+add_btn = tk.Button(button_frame, text="➕ Add", command=add_contact, **button_style)
+add_btn.grid(row=0, column=0, padx=5)
 
-#create a listbox to display contacts
-contact_list = tk.Listbox(root, width=40)
-contact_llist.grid(row=5, cloumn=0, columnspan=3)
+update_btn = tk.Button(button_frame, text="🔄Update", command=update_selected_contact, **button_style)
+update_btn.grid(row=0, column=1, padx=5)
 
-# run application
+delete_btn = tk.Button(button_frame, text="🗑️Delete", command=delete_contact, **button_style)
+delete_btn.grid(row=0, column=2, padx=5)
+
+# Search
+search_frame = tk.Frame(root, bg="lightgrey")
+search_frame.pack(pady=10)
+
+tk.Label(search_frame, text="Search:", bg="lightgrey", font=("Helvetica", 10), fg="black").grid(row=0, column=0, sticky="e")
+search_entry = tk.Entry(search_frame, width=20, bg="white", fg="black", font=("Helvetica", 10))
+search_entry.grid(row=0, column=1, padx=5)
+
+search_btn = tk.Button(search_frame, text="🔍 Search", command=search_contact, **button_style)
+search_btn.grid(row=0, column=2, padx=5)
+
+# Contact list
+contact_list = tk.Listbox(root, width=50, height=10, font=("Helvetica", 10), bg="white", fg="black")
+contact_list.pack(pady=10)
+
+# Run the application
 root.mainloop()
